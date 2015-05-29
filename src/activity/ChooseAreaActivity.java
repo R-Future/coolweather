@@ -13,7 +13,10 @@ import model.CoolWeatherDB;
 import model.County;
 import model.Province;
 import android.app.*;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.view.*;
 import android.widget.*;
@@ -45,6 +48,15 @@ public class ChooseAreaActivity extends Activity {
 	private int currentlevel;
 	protected void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
+		
+		SharedPreferences prefs=PreferenceManager.getDefaultSharedPreferences(this);
+		if(prefs.getBoolean("city_selected", false)){
+			Intent intent=new Intent(this,WeatherActivity.class);
+			startActivity(intent);
+			finish();
+			return;
+		}
+		
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.choose_area);
 		listView=(ListView) findViewById(R.id.list_view);
@@ -61,6 +73,13 @@ public class ChooseAreaActivity extends Activity {
 				else if(currentlevel==LEVEL_CITY){
 					selectedcity=citylist.get(index);
 					queryCounties();
+				}
+				else if(currentlevel==LEVEL_COUNTY){
+					String countycode=countylist.get(index).getCountyCode();
+					Intent intent=new Intent(ChooseAreaActivity.this,WeatherActivity.class);
+					intent.putExtra("county_code", countycode);
+					startActivity(intent);
+					finish();
 				}
 			}
 		});
