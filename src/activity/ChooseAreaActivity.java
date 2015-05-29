@@ -43,14 +43,17 @@ public class ChooseAreaActivity extends Activity {
 	//selected city
 	private City selectedcity;
 	//selected county
-	private County selectedcounty;
+	//private County selectedcounty;
 	//current selected level
 	private int currentlevel;
+	//does it swift from WeatherActivity
+	private boolean isfromweatheractivity;
 	protected void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
+		isfromweatheractivity=getIntent().getBooleanExtra("from_weather_activity", false);
 		
 		SharedPreferences prefs=PreferenceManager.getDefaultSharedPreferences(this);
-		if(prefs.getBoolean("city_selected", false)){
+		if(prefs.getBoolean("city_selected", false)&&!isfromweatheractivity){
 			Intent intent=new Intent(this,WeatherActivity.class);
 			startActivity(intent);
 			finish();
@@ -209,7 +212,12 @@ public class ChooseAreaActivity extends Activity {
 			queryProvinces();
 		}
 		else{
+			if(isfromweatheractivity){
+				Intent intent=new Intent(this,WeatherActivity.class);
+				startActivity(intent);
+			}
 			finish();
 		}
+		
 	}
 }
